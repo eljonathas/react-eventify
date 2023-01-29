@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { EventsContext } from './types/EventsContext';
+import { EventsContext } from './EventsContext';
 
 export function useEvents() {
   const context = useContext(EventsContext);

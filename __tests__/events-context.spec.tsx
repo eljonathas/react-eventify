@@ -5,7 +5,7 @@ import { EventsProvider, useEvent, useEvents } from '../src';
 
 const Component = () => {
   const [test, setTest] = useState('test1');
-  const { createEvent, triggerEvent } = useEvents();
+  const { createEvent } = useEvents();
 
   const handleChange = createEvent('changeText', (text: string) => {
     act(() => {

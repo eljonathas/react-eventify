@@ -1,19 +1,15 @@
 {
-  "name": "react-events",
-  "version": "1.0.0",
+  "name": "react-eventify",
+  "version": "1.0.0-alpha.3",
   "description": "React events",
-  "type": "module",
+  "types": "dist/index.d.ts",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "module": "dist/index.esm.js",
   "author": "@eljonathas",
   "license": "MIT",
-  "exports": {
-    ".": {
-      "import": "./dist/index.esm.js",
-      "require": "./dist/index.js"
-    },
-    "./package.json": "./package.json"
-  },
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
@@ -47,5 +43,9 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
     "typescript": "^4.9.4"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

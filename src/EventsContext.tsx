@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { createContext, PropsWithChildren } from 'react';
-import { EventProps } from './events';
-import { EventAction, EventsContextProps } from './context';
+import { EventProps } from './types/events';
+import { EventAction, EventsContextProps } from './types/context';
 
 export const EventsContext = createContext({} as unknown as EventsContextProps);
 
