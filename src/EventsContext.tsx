@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useRef,
-  createContext,
-  PropsWithChildren,
-} from 'react';
+import React, { useRef, createContext, PropsWithChildren } from 'react';
 
 import { EventProps } from './types/events';
 import { EventAction, EventsContextProps } from './types/context';
@@ -39,31 +34,25 @@ export function EventsProvider({ children }: PropsWithChildren) {
     events.current.delete(eventName);
   }
 
-  const startListener = useCallback(
-    (eventName: string, callback: (event: any) => any) => {
-      const event = events.current.get(eventName);
+  const startListener = (eventName: string, callback: (event: any) => any) => {
+    const event = events.current.get(eventName);
 
-      if (event) {
-        event.listeners.push(callback);
+    if (event) {
+      event.listeners.push(callback);
+    }
+  };
+
+  const stopListener = (eventName: string, callback?: (event: any) => void) => {
+    const event = events.current.get(eventName);
+
+    if (event) {
+      if (!callback) {
+        event.listeners = [];
+      } else {
+        event.listeners = event.listeners.filter((l) => l !== callback);
       }
-    },
-    []
-  );
-
-  const stopListener = useCallback(
-    (eventName: string, callback?: (event: any) => void) => {
-      const event = events.current.get(eventName);
-
-      if (event) {
-        if (!callback) {
-          event.listeners = [];
-        } else {
-          event.listeners = event.listeners.filter((l) => l !== callback);
-        }
-      }
-    },
-    []
-  );
+    }
+  };
 
   return (
     <EventsContext.Provider
