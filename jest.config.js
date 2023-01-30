@@ -3,7 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 
-export default {
+module.exports = {
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,
