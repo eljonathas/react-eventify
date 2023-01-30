@@ -1,5 +1,10 @@
-import React, { useCallback, useRef } from 'react';
-import { createContext, PropsWithChildren } from 'react';
+import React, {
+  useCallback,
+  useRef,
+  createContext,
+  PropsWithChildren,
+} from 'react';
+
 import { EventProps } from './types/events';
 import { EventAction, EventsContextProps } from './types/context';
 
