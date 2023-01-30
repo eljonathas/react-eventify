@@ -11,31 +11,24 @@ import { EventAction, EventsContextProps } from './types/context';
 export const EventsContext = createContext({} as unknown as EventsContextProps);
 
 export function EventsProvider({ children }: PropsWithChildren) {
-  const events = useRef<EventProps[]>([]);
+  const events = useRef<Map<string, EventProps>>(new Map());
 
   function triggerEvent<T>(eventName: string, event: T) {
-    const eventIndex = events.current.findIndex((e) => e.name === eventName);
+    const currentEvent = events.current.get(eventName);
 
-    if (eventIndex !== -1) {
-      events.current[eventIndex].callback(event);
-      events.current[eventIndex].listeners.forEach((l) => l(event));
+    if (currentEvent) {
+      currentEvent.callback(event);
+      currentEvent.listeners.forEach((l) => l(event));
     }
   }
 
   function createEvent<T>(eventName: string, action: EventAction<T>) {
-    const eventIndex = events.current.findIndex((e) => e.name === eventName);
-
-    const newEvent = {
-      name: eventName,
+    const props = {
       callback: action,
       listeners: [],
     };
 
-    if (eventIndex === -1) {
-      events.current.push(newEvent);
-    } else {
-      events.current[eventIndex] = newEvent;
-    }
+    events.current.set(eventName, props);
 
     return (...args: T[]) => {
       triggerEvent(eventName, args);
@@ -43,28 +36,30 @@ export function EventsProvider({ children }: PropsWithChildren) {
   }
 
   function removeEvent(eventName: string) {
-    events.current = events.current.filter((e) => e.name !== eventName);
+    events.current.delete(eventName);
   }
 
   const startListener = useCallback(
-    (eventName: string, callback: (...args: any[]) => any) => {
-      const eventIndex = events.current.findIndex((e) => e.name === eventName);
+    (eventName: string, callback: (event: any) => any) => {
+      const event = events.current.get(eventName);
 
-      if (eventIndex !== -1) {
-        events.current[eventIndex].listeners.push(callback);
+      if (event) {
+        event.listeners.push(callback);
       }
     },
     []
   );
 
   const stopListener = useCallback(
-    (eventName: string, callback: (event: any) => void) => {
-      const eventIndex = events.current.findIndex((e) => e.name === eventName);
+    (eventName: string, callback?: (event: any) => void) => {
+      const event = events.current.get(eventName);
 
-      if (eventIndex !== -1) {
-        events.current[eventIndex].listeners = events.current[
-          eventIndex
-        ].listeners.filter((l) => l !== callback);
+      if (event) {
+        if (!callback) {
+          event.listeners = [];
+        } else {
+          event.listeners = event.listeners.filter((l) => l !== callback);
+        }
       }
     },
     []
