@@ -55,6 +55,7 @@ jobs:
       # Update changelog unreleased section with new version
       - name: Update changelog
         uses: superfaceai/release-changelog-action@v1
+        if: startsWith(github.event.inputs.release-type, 'pre') != true
         with:
           path-to-changelog: CHANGELOG.md
           version: ${{ env.NEW_VERSION }}
