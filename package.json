@@ -1,6 +1,6 @@
 {
   "name": "react-eventify",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "React events",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",

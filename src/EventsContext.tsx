@@ -20,7 +20,7 @@ export function EventsProvider({ children }: PropsWithChildren) {
       currentEvent.callback(event);
       currentEvent.listeners.forEach((l) => l(event));
     } else {
-      throw new Error(`Event ${eventName} not found`);
+      console.warn(`Event ${eventName} does not exist`);
     }
   }
 
