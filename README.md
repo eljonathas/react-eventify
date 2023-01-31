@@ -34,15 +34,15 @@ const App = () => {
 };
 ```
 
-Once you done that, you can use the `useEvent` hook to subscribe to events and the `createEvent` function to create events. Also, you can use the `triggerEvent` function to trigger registered events.
+Once you done that, you can use the `useEvent` hook to subscribe to events and the `registerEvent` function to create events directly in component scope. Otherwise, you can manually create events using the `createEvent` function and remove them using the `removeEvent` function inside the `useEffect` hook. Also, you can use the `triggerEvent` function to trigger registered events.
 
 ```jsx
-import { useEvent, createEvent, triggerEvent } from 'react-eventify';
+import { useEvent, registerEvent, triggerEvent } from 'react-eventify';
 
 const MyComponent = () => {
   const [count, setCount] = useState(0);
 
-  const increment = createEvent('increment', () => {
+  const increment = registerEvent('increment', () => {
     setCount(count + 1);
   });
 
@@ -70,21 +70,30 @@ const MyComponent = () => {
 };
 ```
 
-Otherwise, if you want to remove previously registered events, you can use the `removeEvent` function.
+If you want to remove previously registered events, you can use the `removeEvent` function.
 
 ```jsx
-import { removeEvent } from 'react-eventify';
+import { useEvents } from 'react-eventify';
 
 const MyComponent = () => {
   const [count, setCount] = useState(0);
+  const { createEvent, removeEvent } = useEvents();
 
-  const increment = createEvent('increment', () => {
+  const increment = () => {
     setCount(count + 1);
   });
 
   useEvent('increment', () => {
     console.log('Incremented!');
   });
+
+  useEffect(() => {
+    createEvent('increment', increment);
+
+    return () => {
+      removeEvent('increment');
+    };
+  }, []
 
   return (
     <div>
@@ -107,6 +116,10 @@ The `EventsProvider` component is used to wrap the root component of your applic
 ### `createEvent(eventName, callback)`
 
 The `createEvent` function is used to create events. It takes two arguments: `eventName` and `callback`. The `eventName` is the name of the event and the `callback` is the function that will be executed when the event is triggered.
+
+### `registerEvent(eventName, callback)`
+
+The `registerEvent` is the combination of the `createEvent` and `removeEvent` functions inside the `useEffect` hook to avoid recreating the event on every render when use it in component scope. It takes two arguments: `eventName` and `callback`. The `eventName` is the name of the event and the `callback` is the function that will be executed when the event is triggered. We strongly recommend using this method when you want to wrap functions inside the component scope to register events about them.
 
 ### `useEvent(eventName, callback)`
 

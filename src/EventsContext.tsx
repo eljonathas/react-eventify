@@ -1,4 +1,9 @@
-import React, { useRef, createContext, PropsWithChildren } from 'react';
+import React, {
+  useRef,
+  createContext,
+  PropsWithChildren,
+  useEffect,
+} from 'react';
 
 import { EventProps } from './types/events';
 import { EventAction, EventsContextProps } from './types/context';
@@ -14,7 +19,23 @@ export function EventsProvider({ children }: PropsWithChildren) {
     if (currentEvent) {
       currentEvent.callback(event);
       currentEvent.listeners.forEach((l) => l(event));
+    } else {
+      throw new Error(`Event ${eventName} not found`);
     }
+  }
+
+  function registerEvent<T>(eventName: string, action: EventAction<T>) {
+    useEffect(() => {
+      createEvent(eventName, action);
+
+      return () => {
+        removeEvent(eventName);
+      };
+    }, []);
+
+    return (...args: T[]) => {
+      triggerEvent(eventName, args);
+    };
   }
 
   function createEvent<T>(eventName: string, action: EventAction<T>) {
@@ -62,6 +83,7 @@ export function EventsProvider({ children }: PropsWithChildren) {
         createEvent,
         removeEvent,
         triggerEvent,
+        registerEvent,
       }}
     >
       {children}
