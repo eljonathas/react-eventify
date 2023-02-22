@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { useEvents } from './useEvents';
 
 export function useEvent<T>(eventName: string, callback: (event: T) => void) {
-  const { startListener, stopListener } = useEvents();
+  const { addEventListener, removeEventListener } = useEvents();
 
   useEffect(() => {
-    startListener(eventName, callback);
+    addEventListener(eventName, callback);
 
     return () => {
-      stopListener(eventName, callback);
+      removeEventListener(eventName, callback);
     };
-  }, [eventName, callback, startListener, stopListener]);
+  }, [eventName, callback, addEventListener, removeEventListener]);
 }

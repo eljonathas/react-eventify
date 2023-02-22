@@ -10,7 +10,10 @@ export type EventsContextProps = {
     eventName: string,
     action: EventAction<T>
   ): (...args: T[]) => void;
-  startListener<T>(eventName: string, callback: (event: T) => void): void;
-  stopListener<T>(eventName: string, callback?: (event: T) => void): void;
+  addEventListener<T>(eventName: string, callback: (event: T) => void): void;
+  removeEventListener<T>(
+    eventName: string,
+    callback?: (event: T) => void
+  ): void;
   triggerEvent<T>(eventName: string, event: T): void;
 };

@@ -3,6 +3,7 @@ import React, {
   createContext,
   PropsWithChildren,
   useEffect,
+  DependencyList,
 } from 'react';
 
 import { EventProps } from './types/events';
@@ -17,30 +18,34 @@ export function EventsProvider({ children }: PropsWithChildren) {
     const currentEvent = events.current.get(eventName);
 
     if (currentEvent) {
-      currentEvent.callback(event);
+      currentEvent.action(event);
       currentEvent.listeners.forEach((l) => l(event));
     } else {
       console.warn(`Event ${eventName} does not exist`);
     }
   }
 
-  function registerEvent<T>(eventName: string, action: EventAction<T>) {
+  function registerEvent<T>(
+    eventName: string,
+    action: EventAction<T>,
+    deps: DependencyList = []
+  ) {
     useEffect(() => {
       createEvent(eventName, action);
 
       return () => {
         removeEvent(eventName);
       };
-    }, []);
+    }, deps);
 
-    return (...args: T[]) => {
+    return (args: T) => {
       triggerEvent(eventName, args);
     };
   }
 
   function createEvent<T>(eventName: string, action: EventAction<T>) {
     const props = {
-      callback: action,
+      action,
       listeners: [],
     };
 
@@ -55,7 +60,10 @@ export function EventsProvider({ children }: PropsWithChildren) {
     events.current.delete(eventName);
   }
 
-  const startListener = (eventName: string, callback: (event: any) => any) => {
+  const addEventListener = (
+    eventName: string,
+    callback: (event: any) => any
+  ) => {
     const event = events.current.get(eventName);
 
     if (event) {
@@ -63,7 +71,10 @@ export function EventsProvider({ children }: PropsWithChildren) {
     }
   };
 
-  const stopListener = (eventName: string, callback?: (event: any) => void) => {
+  const removeEventListener = (
+    eventName: string,
+    callback?: (event: any) => void
+  ) => {
     const event = events.current.get(eventName);
 
     if (event) {
@@ -78,8 +89,8 @@ export function EventsProvider({ children }: PropsWithChildren) {
   return (
     <EventsContext.Provider
       value={{
-        startListener,
-        stopListener,
+        addEventListener,
+        removeEventListener,
         createEvent,
         removeEvent,
         triggerEvent,
