@@ -14,7 +14,7 @@ export const EventsContext = createContext({} as unknown as EventsContextProps);
 export function EventsProvider({ children }: PropsWithChildren) {
   const events = useRef<Map<string, EventProps>>(new Map());
 
-  function triggerEvent<T>(eventName: string, event: T) {
+  function triggerEvent<T>(eventName: string, event?: T) {
     const currentEvent = events.current.get(eventName);
 
     if (currentEvent) {
