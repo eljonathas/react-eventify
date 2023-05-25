@@ -117,9 +117,9 @@ The `EventsProvider` component is used to wrap the root component of your applic
 
 The `createEvent` function is used to create events. It takes two arguments: `eventName` and `callback`. The `eventName` is the name of the event and the `callback` is the function that will be executed when the event is triggered.
 
-### `registerEvent(eventName, callback)`
+### `registerEvent(eventName, callback, deps)`
 
-The `registerEvent` is the combination of the `createEvent` and `removeEvent` functions inside the `useEffect` hook to avoid recreating the event on every render when use it in component scope. It takes two arguments: `eventName` and `callback`. The `eventName` is the name of the event and the `callback` is the function that will be executed when the event is triggered. We strongly recommend using this method when you want to wrap functions inside the component scope to register events about them.
+The `registerEvent` is the combination of the `createEvent` and `removeEvent` functions inside the `useEffect` hook to avoid recreating the event on every render when use it in component scope. It takes three arguments: `eventName`, `callback` and the optional `deps`. The `eventName` is the name of the event, the `callback` is the function that will be executed when the event is triggered and the `deps` is the dependency list of useEffect that causes the remotion and creation of the event every when these values changes. We strongly recommend using this method when you want to wrap functions inside the component scope to register events about them.
 
 ### `useEvent(eventName, callback)`
 
