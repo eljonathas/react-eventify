@@ -1,3 +1,5 @@
+import { DependencyList } from 'react';
+
 export type EventAction<T = any> = (...args: T[]) => void;
 
 export type EventsContextProps = {
@@ -23,6 +25,7 @@ export type EventsContextProps = {
    * Use this method to register an event. It returns a function that can be used to trigger the event.
    * @param eventName the name of the event
    * @param action the action to be called when the event is triggered
+   * @param deps the dependencies of useEffect hook
    * @returns a function that can be used to trigger the event
    *
    * **Note:** This method is a combination of `createEvent` and `registerEvent`.
@@ -30,7 +33,8 @@ export type EventsContextProps = {
    */
   registerEvent<T = any>(
     eventName: string,
-    action: EventAction<T>
+    action: EventAction<T>,
+    deps?: DependencyList
   ): (...args: T[]) => void;
   /**
    * Use this method to add an event listener that will be called when the event is triggered.
